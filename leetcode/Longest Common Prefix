@@ -1,0 +1,46 @@
+//提示runtime error时，注意是否有返回值
+//substr（）中第二个参数的意义是往后的个数，而数组中的下标意义完全不同,千万不要混用，或用同一个变量表示
+//不能以循环内的计数器判断是否结束，因为计数器j一定会等于strs[].length()
+//出现“” ！= “”提示时，可能是“\0” 和“”
+//尽量不用substr
+
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string> &strs) 
+    {
+        if (strs.size() == 0) return "";
+        if (strs[0] == "") return "";
+        if (strs.size() == 1) return strs[0];
+
+        
+        int pos =-1;
+        bool done = false;
+        char c;
+        
+
+        
+        
+        while (!done)
+        {
+            if(++pos==strs[0].size()) break; //唯一跳出while循环的方法，必须在if判断语句中进行+1操作，才不会影响后续的返回值
+            
+            
+            c = strs[0][pos];
+            
+            for (int i = 1; i < strs.size(); ++i)
+            {
+                if (strs[i] == "") return "";
+                if ( strs[i][pos] != c) //  strs[i].size() <= pos 不影响结果，因为如果越界，strs[i][pos] == '\0'
+                {
+                    done = true;
+                    break; //breaK只能跳出当前循环
+                }
+            }
+
+        }
+        
+        return pos == 0 ? "" : strs[0].substr(0, pos);
+        
+    }
+};

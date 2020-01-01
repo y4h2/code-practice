@@ -1,0 +1,94 @@
+/*
+Given a 2D board containing 'X' and 'O', capture all regions surrounded by 'X'.
+
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+For example,
+X X X X
+X O O X
+X X O X
+X O X X
+After running your function, the board should be:
+
+X X X X
+X X X X
+X X X X
+X O X X
+*/
+
+//由边沿的O开始，使用BFS算法
+//把和边沿连通的点都标记为B
+
+
+class Solution {
+public:
+    void solve(vector<vector<char> > &board) 
+    {
+        if (board.size() <= 1 || board[0].size() <= 1) return;
+        int width = board.size(), length = board[0].size();
+        
+        for (int i = 0; i < length; ++i)
+        {
+            if (board[0][i] == 'O')
+                solveBFS(board, 0, i);
+            if (board[width - 1][i] == 'O')
+                solveBFS(board, width - 1, i);
+        }
+        
+        for (int i = 0; i < width; ++i)
+        {
+            if (board[i][0] == 'O')
+                solveBFS(board, i, 0);
+            if (board[i][length - 1] == 'O')
+                solveBFS(board, i, length - 1);
+        }
+        
+        for (int i = 0; i < width; ++i)
+        {
+            for (int j = 0; j < length; ++j)
+            {
+                if (board[i][j] == 'B')
+                    board[i][j] = 'O';
+                else if (board[i][j] == 'O')
+                    board[i][j] = 'X';
+            }
+        }
+        
+        return;
+    }
+    
+    void solveBFS(vector<vector<char> > &board, int i, int j)
+    {
+        int width = board.size();
+        int length = board[0].size();
+        deque<pair<int, int> > q;
+        q.push_back(make_pair(i, j));
+        board[i][j] = 'B';
+        
+        while (!q.empty())
+        {
+            pair<int, int> cur = q.front();
+            q.pop_front();
+            pair<int, int> buffer[4] = 
+            {
+                {cur.first + 1, cur.second}, 
+                {cur.first - 1, cur.second}, 
+                {cur.first, cur.second - 1}, 
+                {cur.first, cur.second + 1}
+            };
+            
+            for (int i = 0; i < 4; ++i)
+            {
+                int w = buffer[i].first, l = buffer[i].second;
+                if ((w >= 0 && w < width && l >= 0 && l < length) && board[w][l] == 'O')
+                {
+                    q.push_back(make_pair(w, l));
+                    board[w][l] = 'B';
+                }
+            }
+        }
+        
+        return;
+    }
+ 
+};

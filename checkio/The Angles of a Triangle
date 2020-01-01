@@ -1,0 +1,10 @@
+from math import acos, degrees
+def checkio(a, b, c):
+    a, b, c = sorted([a, b, c])
+    if a + b <= c :
+        return [0, 0, 0]
+    else:
+        return sorted([angle(a,b,c), angle(b,c,a), angle(a,c,b)])
+    
+def angle(a, b ,c):
+    return round(degrees(acos((a**2 + b**2 - c**2) / float(2 * a * b))))

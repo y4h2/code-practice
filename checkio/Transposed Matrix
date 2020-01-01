@@ -1,0 +1,13 @@
+def checkio(data):
+    result = []
+    for i in range(len(data[0])):
+        temp = []
+        for row in data:
+            temp.append(row[i])
+        result.append(temp)
+    return result
+
+
+Solution 2:
+def checkio(matr):
+    return list(map(list, zip(*matr)))

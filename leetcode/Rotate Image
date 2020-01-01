@@ -1,0 +1,39 @@
+/*
+You are given an n x n 2D matrix representing an image.
+
+Rotate the image by 90 degrees (clockwise).
+
+Follow up:
+Could you do this in-place?
+*/
+
+
+class Solution {
+public:
+    void rotate(vector<vector<int> > &matrix) {
+        auto result = matrix; //数组一定要初始化，不然没空间，会产生越界错误
+
+        for (int i = 0; i < matrix.size(); i++) {
+            for (int j = 0; j < matrix.size(); j++) {
+                result[j][matrix.size() - i - 1] = matrix[i][j]; //不能使用普通交换直接换位置，这样再后面的处理中，位置会发生二次改变，也就是说一次循环只能交换行顺序或者只交换列顺序
+            }
+        }
+        matrix = result;
+    }
+};
+
+
+
+//原地翻转，进行两次操作即可
+#include <algorithm>
+
+class Solution {
+public:
+    void rotate(vector<vector<int> > &matrix) 
+    {
+        reverse(matrix.begin(), matrix.end());
+        for (unsigned i = 0; i < matrix.size(); ++i)
+            for (unsigned j = i+1; j < matrix[i].size(); ++j)
+                swap (matrix[i][j], matrix[j][i]);
+    }
+};

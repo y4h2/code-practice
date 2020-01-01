@@ -1,0 +1,54 @@
+/*
+Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle containing all ones and return its area.
+*/
+
+//利用Largest Rectangle in Histogram的思想
+//先把矩阵构造成直方图，用height数组存储每列的直方图，该直方图表示从0到目前该行，每列连续的1的个数
+//构造出直方图后，利用之前相同解法即可
+
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char> > &matrix) 
+    {
+        if (matrix.empty()) return 0;
+        
+        vector<int> height(matrix[0].size() + 1, 0);
+        int result = 0;
+        
+        for (int i = 0; i < matrix.size(); ++i)
+        {
+            stack<int> s;
+            for (int j = 0; j < matrix[0].size() + 1; ++j )
+            {
+                if (j < matrix[0].size())
+                {
+                    if (matrix[i][j] == '1')
+                    {
+                        height[j] += 1;
+                    }
+                    else
+                    {
+                        height[j] = 0;
+                    }
+                }
+                
+                if (s.empty() || height[s.top()] <= height[j])
+                {
+                    s.push(j);
+                }
+                else
+                {
+                    while (!s.empty() && height[j] < height[s.top()])
+                    {
+                        int h = height[s.top()];
+                        s.pop();
+                        result = max(result, h * (s.empty()? j : (j - s.top() - 1)));
+                    }
+                    s.push(j);
+                }
+            }
+        }
+        
+        return result;
+    }
+};

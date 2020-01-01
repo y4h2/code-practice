@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int removeElement(int A[], int n, int elem) 
+    {
+
+        for (int i = 0; i < n ; ++i) // 注：sizeof(A) / sizeof(A[0])只能知道数组分配的个数
+        {
+            if (A[i] == elem)
+            {
+                A[i] = A[n - 1];
+                n--;
+                i--;
+            }
+        }
+        return n;
+    }
+};
+
+//数组元素没有销毁一说，一般所说的去掉其他元素，意思是把剩下的元素都放到数组头部去，只输出剩下的元素即可
+//数组中剩余元素需要手工标记

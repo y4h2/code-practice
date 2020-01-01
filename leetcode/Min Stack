@@ -1,0 +1,60 @@
+/*
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+*/
+
+1.双栈法
+class MinStack {
+public:
+    void push(int x) 
+    {
+        s.push(x);
+        if (minInt.empty() == true)
+        {
+            minInt.push(x);
+        }
+        else if (minInt.top() >= x)
+        {
+            minInt.push(x);
+        }
+        
+        return;
+    }
+
+    void pop() 
+    {
+        if (s.top() == minInt.top())
+        {
+            minInt.pop();
+            s.pop();
+        }
+        else
+            s.pop();
+    
+        return;
+    }
+
+    int top() 
+    {
+        return s.top();
+    }
+
+    int getMin() 
+    {
+        
+        return minInt.top();
+    }
+    
+private: 
+    stack<int> s;
+    stack<int> minInt;
+
+    
+};
+
+2.一个栈
+见cracking the coding interview Q3.2

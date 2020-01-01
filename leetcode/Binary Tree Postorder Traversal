@@ -1,0 +1,67 @@
+/*
+Given a binary tree, return the postorder traversal of its nodes' values.
+
+For example:
+Given binary tree {1,#,2,3},
+   1
+    \
+     2
+    /
+   3
+return [3,2,1].
+*/
+
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode *root) 
+    {
+        vector<int> result;
+        if (root == NULL) return result;
+        stack <TreeNode *> buffer;
+        TreeNode *pCur = root;
+        
+        while (!buffer.empty() || pCur != NULL)
+        {
+            if (pCur != NULL)
+            {
+                result.push_back(pCur->val);
+                buffer.push(pCur);
+                pCur = pCur->right;
+            }
+            else
+            {
+                pCur = buffer.top();
+                buffer.pop();
+                pCur = pCur->left;
+            }
+            
+        }
+        
+        reverse(result.begin(), result.end());
+        
+        return result;
+    }
+};
+
+//更容易理解的循环写法
+         while (!buffer.empty())
+        {
+            pCur = buffer.top();
+            result.push_back(pCur->val);
+            buffer.pop();
+            
+            if (pCur->left != NULL)
+                buffer.push(pCur->left);
+            if (pCur->right != NULL)
+                buffer.push(pCur->right);
+        }

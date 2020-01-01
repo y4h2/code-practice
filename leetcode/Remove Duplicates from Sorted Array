@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int removeDuplicates(int A[], int n) 
+    {
+       if (n == 0) return n;
+       int k = 0;   //k的主要作用是为了记录一共有多少个不相同的元素，由于是从0开始计数，所以最后要+1
+       
+       for (int i = 1; i < n; ++i)
+       {
+           if (A[i] != A[k]) 
+           {
+               A[++k] = A[i];  //找到一个不相同的元素之后，把它放到有序的元素之后
+                              //k当前指的位置是前面排好序的不重复的序列的最后一个
+           }
+       }
+       
+       return k + 1;
+    }
+};

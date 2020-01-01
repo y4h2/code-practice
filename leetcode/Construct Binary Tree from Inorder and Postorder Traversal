@@ -1,0 +1,44 @@
+/*
+Given inorder and postorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+*/
+//注意，分段的时候始终加distance就行了，不用+1，前序的那个+1是因为第一个元素读过之后才+1
+//iterator中的end()始终指向的都是有效元素的后一个位置
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) 
+    {
+        return inorder.size() == 0 ? NULL : buildTree(begin(inorder), end(inorder),begin(postorder), end(postorder));
+    }
+    
+    TreeNode *buildTree(vector<int>::iterator in_first, vector<int>::iterator in_last, vector<int>::iterator post_first, vector<int>::iterator post_last)
+    {
+        if (in_first >= in_last) return NULL;
+        if (post_first >= post_last) return NULL;
+        
+        int val = *prev(post_last);
+        TreeNode *root = new TreeNode(val);
+        vector<int>::iterator rootPos = find(in_first, in_last, val);
+        vector<int>::size_type distance = rootPos - in_first;
+
+
+        
+        root->left = buildTree(in_first, rootPos, post_first, post_first + distance);
+        root->right = buildTree(rootPos + 1, in_last,post_first + distance, post_last - 1);
+        
+        
+        return root;
+    }
+};

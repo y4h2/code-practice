@@ -1,0 +1,4 @@
+- A parser: Add an object that reads the text and manages the other classes.
+- Rules: You can make one rule for each type of block. The rule should be able to detect the applicable block type and to format it appropriately.
+- Filters: Use filters to wrap up some regular expressions to deal with in-line elements.
+- Handlers: The parser uses handlers to generate output. Each handler can produce a different kind of markup.

@@ -1,0 +1,30 @@
+/*
+Given a positive integer, return its corresponding column title as appear in an Excel sheet.
+
+For example:
+
+    1 -> A
+    2 -> B
+    3 -> C
+    ...
+    26 -> Z
+    27 -> AA
+    28 -> AB 
+*/
+//数字和字母的转换需要把数字减一
+
+class Solution {
+public:
+    string convertToTitle(int n) 
+    {
+        string result = "";
+        
+        while (n != 0)
+        {
+            result = (char)((--n) % 26 + 'A') + result; //编译器会把数字加字符转换成数字，所以需要强制类型转换
+            n /= 26;
+        }
+        
+        return result;
+    }
+};

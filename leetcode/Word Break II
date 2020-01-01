@@ -1,0 +1,68 @@
+/*
+Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word.
+
+Return all such possible sentences.
+
+For example, given
+s = "catsanddog",
+dict = ["cat", "cats", "and", "sand", "dog"].
+
+A solution is ["cats and dog", "cat sand dog"].
+*/
+
+//和word break的解法类似，标记存在的子串后，用DFS根据DP表来构造结果
+
+
+class Solution {
+public:
+    vector<string> wordBreak(string s, unordered_set<string> &dict) 
+    {
+        vector<string> result;
+        vector<bool> dp(s.size() + 1, false);
+        vector<vector<bool> > subDp(s.size() + 1, vector<bool> (s.length()));
+        //subDp[i][j]为true表示s[j, i)是一个合法单词，可以从j处切开
+        dp[0] = true;
+        
+        //遍历构造DP表，标记字典中存在的子串
+        for (int i = 1; i <= s.size(); ++i)
+        {
+            for (int j = i - 1; j >= 0; --j)
+            {
+                string temp = s.substr(j, i - j);
+                if (dict.find (temp) != dict.end() && dp[j])
+                {
+                    dp[i] = true;
+                    subDp[i][j] = true;
+                }
+            }
+        }
+        vector<string> path;
+        gen_path(s, subDp, s.size(), path, result);
+        
+        return result;
+    }
+    
+    private:
+    void gen_path(const string &s, const vector<vector<bool> > &subDp, int cur, vector<string> &path, vector<string> &result)
+    {
+        if (cur == 0)
+        {
+            string tmp;
+            for (auto iter = path.crbegin(); iter != path.crend(); ++iter) //Return const_reverse_iterator to reverse beginning 
+            {
+                tmp += *iter + " ";
+            }
+            tmp.erase(tmp.end() - 1); //删去末尾的空格
+            result.push_back(tmp);
+        }
+        for (int i = 0; i < s.size(); ++i)
+        {
+            if (subDp[cur][i])
+            {
+                path.push_back(s.substr(i, cur - i)); //把合法的字符串放入path
+                gen_path(s, subDp, i, path, result);
+                path.pop_back();
+            }
+        }
+    }
+};

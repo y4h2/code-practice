@@ -1,0 +1,43 @@
+/*
+There are N gas stations along a circular route, where the amount of gas at station i is gas[i].
+
+You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from station i to its next station (i+1). You begin the journey with an empty tank at one of the gas stations.
+
+Return the starting gas station's index if you can travel around the circuit once, otherwise return -1.
+
+Note:
+The solution is guaranteed to be unique.
+*/
+
+//用两个指针i,j
+//i从0开始往后走，j从尾部开始往前走
+//如果gasLeft小于0，则j往后走，把起点往前推，否则则往后走，测试后续结点
+
+class Solution {
+public:
+    int canCompleteCircuit(vector<int> &gas, vector<int> &cost) 
+    {
+        if (gas.size() == 1) return gas[0] - cost[0] >= 0? 0 : -1;
+        int n = gas.size();
+        int i = 0,  j = n;
+        int gasLeft = gas[0] - cost[0];
+        while (j - i > 1)
+        {
+            if (gasLeft < 0)
+            {    
+                --j;
+                gasLeft += gas[j] - cost[j];
+            }
+            else
+            {
+                ++i;
+                gasLeft += gas[i] - cost[i];
+            }
+            
+        }
+        if (gasLeft >= 0)
+            return j;
+        else
+            return -1;
+    }
+};

@@ -1,0 +1,40 @@
+/*
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+*/
+//find函数返回的是迭代器，传入的参数也是迭代器
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) 
+    {
+        return preorder.size() == 0 ? NULL : buildTree(begin(preorder), end(preorder), begin(inorder), end(inorder));
+    }
+    
+    
+    TreeNode *buildTree(vector<int>::iterator pre_first, vector<int>::iterator pre_last, vector<int>::iterator in_first, vector<int>::iterator in_last)
+    {
+        if (pre_first >= pre_last) return NULL;
+        if (in_first >= in_last) return NULL;
+        
+        TreeNode* root = new TreeNode(*pre_first);
+        vector<int>::iterator rootPos = find(in_first, in_last, *pre_first);
+        vector<int>::size_type distance = rootPos - in_first;
+        
+        root->left = buildTree(pre_first + 1, pre_first + 1 + distance, in_first, rootPos);
+        root->right = buildTree(pre_first + 1 + distance, pre_last, rootPos + 1, in_last);
+        
+        return root;
+    }
+};

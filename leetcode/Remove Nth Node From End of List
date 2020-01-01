@@ -1,0 +1,74 @@
+/*
+Given a linked list, remove the nth node from the end of list and return its head.
+
+For example,
+
+   Given linked list: 1->2->3->4->5, and n = 2.
+
+   After removing the second node from the end, the linked list becomes 1->2->3->5.
+Note:
+Given n will always be valid.
+Try to do this in one pass.
+*/
+//双指针法即可解决
+//注意删除结点，在没有固定头结点的情况下要考虑1.删除头结点2.删除尾结点3.删除中间节点4.只有一个节点的情况5，为空的情况
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *removeNthFromEnd(ListNode *head, int n) 
+    {
+        ListNode *fast, *slow, *dummyHead; //增加一个头结点，把删除结点时的几种情况压缩到一种，并且把只有一个结点的情况包括了
+        dummyHead->next = head;
+        fast = dummyHead;
+        slow = dummyHead;
+        
+        for (int i = 0; i < n; ++i)
+            fast = fast->next;
+            
+        while (fast != NULL && fast->next != NULL)
+        {
+            fast = fast->next;
+            slow = slow->next;
+        }
+        
+        slow->next = slow->next->next; //删除结点时，要指向被删除结点的前一个结点
+        
+        return dummyHead->next;
+    }
+};
+
+//改进算法
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) 
+    {
+        ListNode *dummyHead, *fast, *slow;
+        dummyHead->next = head;
+        fast = dummyHead;
+        slow = dummyHead;
+        
+        while(n != 0)
+        {
+            fast = fast->next;
+            --n;
+        }
+        
+        while (fast->next != NULL)
+        {
+            fast = fast->next;
+            slow = slow->next;
+        }
+        
+        slow->next = slow->next->next;
+        
+        return dummyHead->next;
+    }
+};

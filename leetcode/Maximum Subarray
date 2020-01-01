@@ -1,0 +1,49 @@
+/*
+Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
+
+For example, given the array [−2,1,−3,4,−1,2,1,−5,4],
+the contiguous subarray [4,−1,2,1] has the largest sum = 6.
+*/
+// Basically, keep adding each integer to the sequence until the sum drops below 0. 
+//If sum is negative, then should reset the sequence.
+//只要sum大于0，加后面的正数肯定会变大
+
+class Solution {
+public:
+    int maxSubArray(int A[], int n) 
+    {
+        int sum = 0, result = A[0];
+        for (int i = 0; i < n; ++i)
+        {
+            sum += A[i];
+            result = max(sum, result);
+            sum = max(sum, 0);
+        }
+        
+        return result;
+        
+    }
+};
+
+
+//DP
+
+class Solution {
+public:
+    int maxSubArray(int A[], int n) 
+    {
+        if (1 == n) return A[0]; 
+
+        int result = A[0], min = 0; //注意初值的取值
+        
+        for (int i = 1; i < n; ++i)
+        {
+            A[i] += A[i - 1]; //A[i]中保存前n项和
+            
+            min = A[i - 1] < min ? A[i - 1] : min; //min取的值必须在result之前
+            result = A[i] - min  > result ? A[i] - min : result;
+        }
+        
+        return result;
+    }
+};

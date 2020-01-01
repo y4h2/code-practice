@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int atoi(const char *str) 
+    {
+        int sign = 1, result = 0;
+        int i = 0; //由于就只有一个字符串，所以共用一个标志位比较方便
+        
+        while (str[i] == ' ') ++i;
+        if ((str[i] == '+') || (str[i] == '-') )
+            sign = 1 - 2 * (str[i++] == '-'); //一行代码解决了符号问题，比if...else更为简洁
+        while((str[i] >= '0') && (str[i] <= '9')) // 以后少用for循环，while循环更加简洁 // 并且限制条件应该为是否为数字，不必到末尾
+        {
+            if(   (result > INT_MAX / 10) ||( (result == INT_MAX / 10) && (str[i] - '0' > 7))) //越界的判断方法
+            {
+                if(sign == 1) return INT_MAX;
+                else return INT_MIN;
+            }
+            result = result * 10 + (str[i++] - '0');
+        }
+
+        
+        return result * sign;
+    }
+};

@@ -1,0 +1,28 @@
+/*
+You are climbing a stair case. It takes n steps to reach to the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+*/
+
+
+class Solution {
+public:
+    int climbStairsHelper(int n, vector<int>& array) //注意一定要加引用，不然中间状态无法保存
+    {
+        if (array[n] != -1) return array[n];
+        
+        array[n] = climbStairsHelper(n - 1, array) + climbStairsHelper(n - 2, array);
+        
+        return array[n];
+    }
+
+    int climbStairs(int n) 
+    {
+        vector<int> array(n + 1, -1); //注意要考虑数组元素个数，如果考虑0的话，需要多加一个元素，不然会越界访问
+        array[0] = 0;
+        array[1] = 1;
+        array[2] = 2;
+
+        return climbStairsHelper(n, array);
+        
+    }

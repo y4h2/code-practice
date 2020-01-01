@@ -1,0 +1,53 @@
+/*
+Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+
+For example,
+If n = 4 and k = 2, a solution is:
+
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+*/
+
+/*
+my idea is using backtracking ,every time I push a number into vector,then I push a bigger one into it; 
+then i pop the latest one,and push a another bigger one... 
+and if I has push k number into vector,I push this into result;
+*/
+
+
+class Solution {
+public:
+    vector<vector<int> > combine(int n, int k) 
+    {
+        vector<vector<int> > result;
+        if (n < k) return result;
+        
+        vector<int> temp(0, k);
+        
+        combine(result, temp, 0, 0, n, k);
+        
+        return result;
+    }
+    
+    void combine (vector<vector<int> > &result, vector<int> temp, int start, int num, int n, int k)
+    {
+        if (num == k)
+        {
+            result.push_back(temp);
+            return;
+        }
+        
+        for (int i = start; i < n; ++i)
+        {
+            temp.push_back(i + 1);
+            combine (result, temp, i + 1, num + 1, n, k);
+            temp.pop_back();
+        }
+    }
+};

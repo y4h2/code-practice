@@ -1,0 +1,64 @@
+/*
+Given n, generate all structurally unique BST's (binary search trees) that store values 1...n.
+
+For example,
+Given n = 3, your program should return all 5 unique BST's shown below.
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on OJ.
+*/
+
+/*
+I start by noting that 1..n is the in-order traversal for any BST with nodes 1 to n. 
+So if I pick i-th node as my root, the left subtree will contain elements 1 to (i-1), and the right subtree will contain elements (i+1) to n. 
+I use recursive calls to get back all possible trees for left and right subtrees and combine them in all possible ways with the root.
+*/
+
+
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode *> generateTrees(int n) 
+    {
+        return generateRec(1, n);
+    }
+    vector<TreeNode *> generateRec(int from, int to)
+    {
+        vector<TreeNode *> result;
+        if (from > to) result.push_back(0);
+        if (from == to) result.push_back(new TreeNode(from));
+        if (from < to)
+        {
+            for (int root = from; root <= to; ++root) //根
+            {
+                vector<TreeNode *> l = generateRec(from, root - 1);
+                vector<TreeNode *> r = generateRec(root + 1, to);
+                for (int i = 0; i < l.size(); ++ i)
+                {
+                    for (int j = 0; j < r.size(); ++j)
+                    {
+                        TreeNode *node = new TreeNode(root); //这里可以引申到前序遍历和后序遍历
+                        node->left = l[i];
+                        node->right = r[j];
+                        result.push_back(node);
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+};

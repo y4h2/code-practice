@@ -1,0 +1,58 @@
+/*
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode *sortedListToBST(ListNode *head) //注意返回的是一个结点，
+    {
+        if (head == NULL) return NULL;
+        if (head->next == NULL)
+            return new TreeNode(head->val);
+        
+        TreeNode *left, *right;
+        TreeNode *root;
+        ListNode *mid = findMidPos(head);    
+        root = new TreeNode(mid->val);
+        root->left = sortedListToBST(head);
+        root->right = sortedListToBST(mid->next);
+        
+        return root;
+    }
+    
+    ListNode * findMidPos(ListNode *head)
+    {
+        ListNode *slow = head, *fast = head, *p = NULL;
+        
+        while (slow != NULL && fast != NULL && fast->next != NULL)
+        {
+            p = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        
+        if (p != NULL) //每次找到中点之后，要把中点之前和之后分成两个链表，之前的通过head找到，之后的通过slow找到
+        {
+            p->next = NULL;
+        }
+        
+        return slow;
+    }
+};

@@ -1,0 +1,51 @@
+/*
+Given a set of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+The same repeated number may be chosen from C unlimited number of times.
+
+Note:
+All numbers (including target) will be positive integers.
+Elements in a combination (a1, a2, … , ak) must be in non-descending order. (ie, a1 ≤ a2 ≤ … ≤ ak).
+The solution set must not contain duplicate combinations.
+For example, given candidate set 2,3,6,7 and target 7, 
+A solution set is: 
+[7] 
+[2, 2, 3] 
+*/
+
+
+class Solution {
+public:
+    vector<vector<int> > combinationSum(vector<int> &candidates, int target) 
+    {
+        sort(candidates.begin(), candidates.end());
+        vector<vector<int> > result;
+        vector<int> buffer;
+        combinationSum (candidates, 0, 0, target, result, buffer);
+        
+        return result;
+    }
+    
+    void combinationSum (vector<int> &candidates, int index ,int sum, int target, vector<vector<int> > &result, vector<int> &buffer)
+    { //index指示当前元素的位置
+        if (sum == target) 
+        {
+            result.push_back(buffer);
+            return;
+        }
+        int n = candidates.size();
+        for (int i = index; i < n; ++i)//每次相加都从当前元素开始，不管前面的元素
+        {
+            if (sum + candidates[i] > target)
+                return;
+            else
+            {
+                buffer.push_back(candidates[i]);
+                combinationSum (candidates, i, sum + candidates[i], target, result, buffer);
+                buffer.pop_back(); //这是buffer保存的是当前状态下已包含的答案，之后的答案已经在迭代过程中完成了，把之前的元素退出，可以寻找下一个答案
+            }
+        }
+        
+        return;
+    }
+};

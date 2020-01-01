@@ -1,0 +1,95 @@
+/*
+Two elements of a binary search tree (BST) are swapped by mistake.
+
+Recover the tree without changing its structure.
+
+Note:
+A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
+*/
+
+/*
+O(n) 空间的解法是，开一个指针数组，中序遍历，将节点指针依次存放到数组里，然后寻找两
+处逆向的位置，先从前往后找第一个逆序的位置，然后从后往前找第二个逆序的位置，交换这两个
+指针的值。
+中序遍历一般需要用到栈，空间也是 O(n) 的，如何才能不使用栈？Morris 中序遍历
+*/
+/*
+Morris 中序遍历的步骤如下：
+1. 初始化当前节点 cur 为 root 节点
+2. 如果 cur 没有左孩子，则输出当前节点并将其右孩子作为当前节点，即 cur = cur->rchild。
+3. 如果 cur 有左孩子，则寻找 cur 的前驱，即 cur 的左子树的最右下角结点。
+a) 如果前驱节点的右孩子为空，将它的右孩子指向当前节点，当前节点更新为当前节点的左
+孩子。
+b) 如果前驱节点的右孩子为当前节点，将它的右孩子重新设为空（恢复树的形状），输出当前
+节点，当前节点更新为当前节点的右孩子。
+*/
+
+/*
+注意到这里有个回溯的过程：需要反复去寻找祖先的右节点，而这个算法巧妙地利用了最右节点的右节点一定是NULL，
+拿最右节点节点的右节点当栈来缓存下一个需要访问的节点，从而避免了反复的回溯，使得在空间O(1)的情况下，时间也是O(n)
+*/
+
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void recoverTree(TreeNode *root) 
+    {
+        if (root == NULL) return;
+        
+        pair<TreeNode *, TreeNode *> broken;
+        TreeNode *cur = root, *prev = NULL; //当前结点和前驱结点
+        while (cur != NULL)
+        {
+            if (cur->left == NULL)
+            {
+                detect (broken, prev, cur);
+                prev = cur;
+                cur = cur->right;
+            }
+            else
+            {
+                auto node = cur->left;
+                //一直向右找到最右结点
+                while (node->right != NULL && node->right != cur)
+                        node = node->right;
+                
+                if (node->right == NULL)
+                {
+                    node->right = cur;
+                    //prev = cur; 不能有这句，因为cur还没有被访问
+                    cur = cur->left; 
+                }
+                else
+                {
+                    detect(broken, prev, cur);
+                    node->right = NULL; //恢复原来的结构
+                    prev = cur;
+                    cur = cur->right;
+                }
+            }
+        }
+
+        swap(broken.first->val, broken.second->val);
+    }
+    
+    void detect(pair<TreeNode*, TreeNode*>& broken, TreeNode *prev, TreeNode *cur)
+    {
+        if (prev != nullptr && prev->val >  cur->val)
+        {
+            if (broken.first == NULL)
+                broken.first = prev;
+                //不能用 else，例如 {0,1}，会导致最后 swap 时 second 为 nullptr，
+                //会 Runtime Error
+            broken.second = cur;
+        }
+    }
+};

@@ -1,0 +1,35 @@
+/*
+Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
+
+For example, given the following triangle
+[
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]
+The minimum path sum from top to bottom is 11 (i.e., 2 + 3 + 5 + 1 = 11).
+
+Note:
+Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
+*/
+
+
+class Solution {
+public:
+    int minimumTotal(vector<vector<int> > &triangle) 
+    {
+        int n = triangle.size();
+        vector<int> minPath(triangle.back()); //返回triangle的最后一个元素,初始化了最底层元素
+        //自底向上构建表,为了缩减表占的空间，所以采用一维数组，之前的数据会被后面的和覆盖
+        for (int layer = n - 2; layer >= 0; --layer)
+        {
+            for (int i = 0; i <= layer; ++i)
+            {
+                minPath[i] = min(minPath[i], minPath[i + 1]) + triangle[layer][i];
+            }
+        }
+        
+        return minPath[0];
+    }
+};

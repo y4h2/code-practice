@@ -1,0 +1,34 @@
+/*
+Given an input string, reverse the string word by word.
+
+For example,
+Given s = "the sky is blue",
+return "blue is sky the".
+*/
+
+class Solution {
+public:
+    void reverseWords(string &s) 
+    {
+        string result;
+        int pos = 0;
+        
+        for (int i = 0; i < s.size(); ++i)
+        {
+            while (s[pos] == ' ')
+                ++pos;
+            if (s[i] == ' ')
+            {
+                if (i > pos)
+                {
+                    result = s.substr(pos, i - pos) + ' ' + result;
+                    pos = i;
+                }
+            }
+            else if (i == s.size() - 1)
+                result = s.substr(pos, i - pos + 1) + ' ' + result;
+        }
+        
+        s = result.substr(0, result.size() - 1); //在result为空的时候，放进第一个单词时，后面跟了一个空格，要把那个空格去掉
+    }
+};

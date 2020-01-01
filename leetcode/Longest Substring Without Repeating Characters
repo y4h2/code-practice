@@ -1,0 +1,73 @@
+/*
+Given a string, find the length of the longest substring without repeating characters. 
+For example, the longest substring without repeating letters for "abcabcbb" is "abc", which the length is 3. 
+For "bbbbb" the longest substring is "b", with the length of 1
+*/
+//算法基本得在O（n）内完成，牺牲空间换取时间
+//为了避免在循环内往前查找上一个重复元素，开辟一个数组专门存储之前出现过的元素的位置
+
+
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) 
+    {
+        if (s.length() == 0) return 0;
+        if (s.length() == 1) return 1;
+        int a[256], b[256];
+        memset (a, 0 , sizeof (a));
+        memset (b, -1, sizeof (b));
+        int cnt = 0, result = 0;
+        int i = 0;
+        
+        while (i < s.length())
+        {
+            if (a[(int)s[i]] == 0)
+            {
+                ++a[(int)s[i]];
+                ++cnt;
+                b[(int)s[i]] = i;   //store the last element's position 
+            }
+            else
+            {
+                memset (a, 0 , sizeof (a));
+                cnt = 0;
+                i = b[(int)s[i]];               
+            }
+            if (result < cnt)
+                result = cnt;
+            ++i;
+
+        }
+        
+        return result;
+        
+    }
+};
+
+// 2016/08/23
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int result = 0;
+        if (s.length() == 0)
+            return result;
+            
+        vector<int> index(s.length());
+        vector<int> bitmap(256, -1);
+        
+        for (int i = 0; i < s.length(); ++i) {
+            if (i >= 1) {
+                index[i] = min(i - bitmap[(int) s[i]], index[i-1] + 1);
+            }
+            else
+                index[i] = 1;
+            
+            
+            bitmap[(int) s[i]] = i;
+            
+            result = result > index[i] ? result : index[i];
+        }
+        return result;
+    }
+};

@@ -1,0 +1,44 @@
+/*如果采用数学的组合数计算，在33的时候就会超时*/
+/*
+Given an index k, return the kth row of the Pascal's triangle.
+
+For example, given k = 3,
+Return [1,3,3,1].
+*/
+
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) 
+    {
+        vector<int> result;
+        int n = rowIndex;
+        
+        result.push_back(1);
+        if (n == 0) return result;
+       
+        for(int i=1; i<= n; ++i)
+        {
+            result.insert(result.begin(),1);
+            for(int j = 1; j < i;++j)
+            {
+                result[j] = result[j] + result[j + 1];
+            }
+        }
+//解法1与解法2的区别在于，每次添加元素的位置不一样，一个是在头部一个是在尾部
+//解法1更为直观，但是效率略低于解法2，两个算法思想相同
+//注意在所有的数组的覆盖操作中，不要覆盖后面会用到的元素，要从相反的方向开始覆盖
+        
+/*解法2
+        for (int i = 1; i <= n ; ++i )
+        {
+            result.push_back(1);
+            for(int j = i - 1;j >= 1; --j)
+            {
+                result[j] = result[j] + result[j - 1];
+            }
+        }
+*/
+        return result;
+    }
+    
+};

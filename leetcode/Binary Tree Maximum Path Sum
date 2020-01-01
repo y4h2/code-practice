@@ -1,0 +1,71 @@
+/*
+Given a binary tree, find the maximum path sum.
+
+The path may start and end at any node in the tree.
+
+For example:
+Given the below binary tree,
+
+       1
+      / \
+     2   3
+Return 6.
+*/
+//有两种情况 1.顺着左子树或者右子树 2.包含左右两颗子树，还有根节点
+//对于情况1， 利用最大子串的知识，num>0时才相加
+//对于情况2，每次把左右子树的值加在一起，再加上根节点跟最大值比较即可
+//由于情况比较复杂，应该把返回左右子树的最大值作为一个递归函数，比较是否存在第二种情况作为另外一个函数
+
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int maxPathSum(TreeNode *root) 
+    {
+        if (root == NULL)
+            return 0;
+        maxSum = root->val;
+        recNodes(root);
+        return maxSum;
+    }
+    
+    int recNodes(TreeNode *root)
+    {
+        int numl = 0, numr = 0;
+        if (root->left != NULL)
+            numl = recNodes(root->left);
+        if (root->right != NULL)
+            numr = recNodes(root->right);
+        int value = root->val;
+        int sumWhole = maxCheck(value, numl + numr);
+        int sumLeft = numl > 0 ? maxCheck(value, numl) : value;
+        int sumRight = numr > 0 ? maxCheck(value, numr) : value;
+        
+        return max(sumLeft, sumRight);
+    }
+    
+    int maxCheck(int value, int sum)
+    {
+        if (sum > 0)
+            sum += value;
+        else
+            sum = value;
+        if (sum > maxSum)
+            maxSum = sum;
+        
+        return sum;
+    }
+    
+    
+private:
+    int maxSum;
+};
+

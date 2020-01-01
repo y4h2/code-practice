@@ -1,0 +1,63 @@
+/*
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+
+For example:
+Given the below binary tree and sum = 22,
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+return
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+*/
+//跟combination sum有点类似
+//仔细思考一下，递归算法的形式参数什么时候释放
+
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int> > pathSum(TreeNode *root, int sum) 
+    {
+        vector<vector<int> > result;
+        vector<int> buffer;        
+        
+        pathSumRec(root, sum, buffer, result);
+        
+        return result;
+    }
+    
+    void pathSumRec (TreeNode *root, int sum ,vector<int> buffer, vector<vector<int> > &result)
+    {
+        if (root == NULL) return;
+        
+        buffer.push_back(root->val);
+
+        if (sum == root->val && root->left == NULL && root->right == NULL)
+        {
+                result.push_back(buffer);
+                return;
+        }
+
+        
+        pathSumRec(root->left, sum - root->val, buffer, result);
+        pathSumRec(root->right, sum - root->val, buffer, result);
+      //由于左右是否为空不定，所以如果把buffer设为取地址的话，无法掌控是否已经放入了元素，使用pop_back()有局限性
+
+    }
+
+};

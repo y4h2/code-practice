@@ -1,0 +1,98 @@
+/*
+Given a collection of integers that might contain duplicates, S, return all possible subsets.
+
+Note:
+Elements in a subset must be in non-descending order.
+The solution set must not contain duplicate subsets.
+For example,
+If S = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+*/
+
+/*
+We can treat duplicate element as a spacial element. 
+For example, if we have duplicate elements (5, 5), instead of treating them as two elements that are duplicate, we can treat it as one special element 5, 
+but this element has more than two choices: you can either NOT put it into the subset, or put ONE 5 into the subset, or put TWO 5s into the subset. 
+Therefore, we are given an array (a1, a2, a3, ..., an) with each of them appearing (k1, k2, k3, ..., kn) times, 
+the number of subset is (k1+1)(k2+1)...(kn+1). 
+We can easily see how to write down all the subsets similar to the approach above.
+*/
+
+class Solution {
+public:
+    vector<vector<int> > subsetsWithDup(vector<int> &S) 
+    {
+        vector<vector<int> > result = {{}};
+        sort(S.begin(), S.end());
+        
+        for (int i = 0; i < S.size();)
+        {
+            int count = 0;
+            while (i + count < S.size() && S[i] == S[i + count]) 
+                ++count;
+            int n = result.size();
+            for (int j = 0; j < n; ++j)
+            {
+                vector<int> buffer = result[j];
+                for (int k = 0; k < count; ++k)
+                {
+                    buffer.push_back(S[i]);
+                    result.push_back(buffer);
+                }
+            }
+            
+            i += count;
+        }
+        
+        return result;
+    }
+};
+
+
+//如果沿用1里面的方法，则会超时
+class Solution {
+public:
+    vector<vector<int> > subsetsWithDup(vector<int> &S) 
+    {
+        sort(S.begin(), S.end());
+        int len = S.size();
+        int size = pow(2, len);
+        vector<vector<int> > result;//二维一定要初始化，不然引用下标时会越界
+        result.push_back({});
+        
+        for (int j = 0; j < size; ++j)
+        {
+            vector<int> subset;
+            for (int i = 0; i < len; ++i)
+            {
+                if ((j >> i) & 1)
+                    subset.push_back(S[i]);
+            }
+            
+            if (!findElem(result, subset))
+                result.push_back(subset);
+            
+        }
+        
+        return result;
+        
+    }
+    
+    bool findElem(vector<vector<int> > result, vector<int> subset)
+    {
+        for (int i = 0; i < result.size(); ++i)
+        {
+            if (subset == result[i])
+                return true;
+        }
+        return false;
+    }
+};

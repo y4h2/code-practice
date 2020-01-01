@@ -1,0 +1,68 @@
+/*
+Given an unsorted integer array, find the first missing positive integer.
+
+For example,
+Given [1,2,0] return 3,
+and [3,4,-1,1] return 2.
+
+Your algorithm should run in O(n) time and uses constant space.
+*/
+
+//注：把元素变为负值，只是为了标记位置是否被占用
+
+
+class Solution {
+public:
+    int firstMissingPositive(int A[], int n) 
+    {
+        if (n == 0) return 1;
+        
+        int k = partition(A, n) + 1;
+        int temp = 0;
+        int result = k;
+        
+        for (int i = 0; i < k; ++i)
+        {
+            temp = abs(A[i]);
+            if (temp <= k)
+            {
+                A[temp - 1] = A[temp - 1] > 0 ? -A[temp - 1] : A[temp - 1];
+            }
+        }
+        
+        for (int i = 0; i < k; ++i)
+        {
+            if (A[i] > 0)
+            {
+                result = i;
+                break;
+            }
+        }
+        
+        return result + 1;
+    }
+    
+    int partition (int *A, int n)
+    {
+        int q = -1;
+        for (int i = 0; i < n; ++i)
+        {
+            if (A[i] > 0)
+            {
+                ++q;
+                swap(A, q, i);
+            }
+        }
+        
+        return q;
+    }
+    void swap (int *A, int a, int b)
+    {
+        if (a != b)
+        {
+            A[a] ^= A[b];
+            A[b] ^= A[a];
+            A[a] ^= A[b];
+        }
+    }
+};

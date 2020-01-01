@@ -1,0 +1,48 @@
+/*
+  Given a non-negative number represented as an array of digits, plus one to the number.
+
+  The digits are stored such that the most significant digit is at the head of the list.
+  注意最高存储在digits[0]中
+*/
+
+
+class Solution {
+public:
+    vector<int> plusOne(vector<int> &digits) 
+    {
+        vector<int> result;
+        int n = digits.size();
+        int carry = 1;
+        
+        for (int i = n -1; (i >= 0) && carry; --i) //传统计数方法，增加一个carry变量，简单方便，不越界不出错
+        {
+            digits[i] += carry;
+            carry = digits[i] / 10;
+            digits[i] %= 10;
+        }
+        
+        if (digits[0] == 0)  //特殊情况，999...999， 输出1000...000
+        {
+            digits[0] = 1;
+            digits.push_back(0);
+        }
+        
+        
+        return digits;
+    }
+};
+
+
+
+
+
+/*        for (int i = n -1; i >= 0; --i)
+        {
+            ++digits[i];
+            digits[i - 1] += digits[i] / 10;
+            digits[i] %= 10;
+        }
+        如果用上述做法，会出现越界的问题，会取到digits[-1]
+        但是如果把for循环改为i >= 1，则又有新问题出现，digits[0] 还需要再对10取模一次
+        而且会影响后续对于特殊情况99999...9999的考虑
+*/
